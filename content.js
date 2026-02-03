@@ -12,22 +12,24 @@
   const BADGE_CLASS = 'true-cost-badge';
   const PROCESSED_ATTR = 'data-true-cost-processed';
 
-  // Price selectors for Amazon
-  const PRICE_SELECTORS = [
-    // Main product page price
-    '.a-price .a-offscreen',
+  // Price selectors for Amazon - only main product price and cart totals
+  const PRODUCT_PAGE_SELECTORS = [
+    // Main product page price (primary price display)
+    '#corePrice_feature_div .a-price .a-offscreen',
+    '#corePriceDisplay_desktop_feature_div .a-price .a-offscreen',
     '#priceblock_ourprice',
     '#priceblock_dealprice',
     '#priceblock_saleprice',
-    '.a-price-whole',
-    // Search results and listings
-    '[data-a-color="price"] .a-offscreen',
-    '.a-color-price',
-    // Cart and checkout
-    '.sc-product-price',
     '.a-price[data-a-size="xl"] .a-offscreen',
-    '.a-price[data-a-size="l"] .a-offscreen',
-    '.a-price[data-a-size="m"] .a-offscreen'
+    '.a-price[data-a-size="l"] .a-offscreen'
+  ];
+
+  const CART_SELECTORS = [
+    // Cart subtotal/total
+    '#sc-subtotal-amount-activecart .a-price .a-offscreen',
+    '#sc-subtotal-amount-buybox .a-price .a-offscreen',
+    '.sc-subtotal .a-price .a-offscreen',
+    '#subtotals-marketplace-table .a-price .a-offscreen'
   ];
 
   // Initialize
@@ -74,10 +76,30 @@
     });
   }
 
+  function getPageType() {
+    const url = window.location.pathname;
+    if (url.includes('/dp/') || url.includes('/gp/product/')) {
+      return 'product';
+    }
+    if (url.includes('/cart') || url.includes('/gp/cart')) {
+      return 'cart';
+    }
+    return 'other';
+  }
+
   function processPage() {
-    PRICE_SELECTORS.forEach(selector => {
-      document.querySelectorAll(selector).forEach(processPriceElement);
-    });
+    const pageType = getPageType();
+
+    if (pageType === 'product') {
+      PRODUCT_PAGE_SELECTORS.forEach(selector => {
+        document.querySelectorAll(selector).forEach(processPriceElement);
+      });
+    } else if (pageType === 'cart') {
+      CART_SELECTORS.forEach(selector => {
+        document.querySelectorAll(selector).forEach(processPriceElement);
+      });
+    }
+    // Skip search results and other pages
   }
 
   function processPriceElement(element) {
