@@ -1,0 +1,23 @@
+{
+  "name": "true-cost-calculator-backend",
+  "version": "1.0.0",
+  "description": "Backend proxy server for True Cost Calculator Chrome extension",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:push": "supabase db push",
+    "db:reset": "supabase db reset",
+    "db:seed": "supabase db seed"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "supabase": "^1.127.0"
+  }
+}

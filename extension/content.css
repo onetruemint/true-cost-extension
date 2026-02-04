@@ -1,0 +1,278 @@
+/* True Cost Calculator - Badge Styles */
+
+.true-cost-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border: 2px solid #ff9800;
+  border-radius: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 1.3;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.25);
+}
+
+.true-cost-label {
+  color: #e65100;
+  font-weight: 500;
+}
+
+.true-cost-value {
+  color: #bf360c;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Hover effect */
+.true-cost-badge:hover {
+  background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
+  box-shadow: 0 3px 8px rgba(255, 152, 0, 0.35);
+}
+
+/* Adjust for different Amazon layouts */
+.a-price-whole + .true-cost-badge,
+.a-price + .true-cost-badge {
+  display: block;
+  width: fit-content;
+}
+
+/* Search results page adjustments */
+.s-result-item .true-cost-badge {
+  margin-top: 2px;
+  font-size: 11px;
+  padding: 3px 6px;
+}
+
+/* Cart page adjustments */
+.sc-list-item .true-cost-badge {
+  margin-left: 8px;
+}
+
+/* Confirmation Modal */
+.true-cost-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.true-cost-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: true-cost-modal-appear 0.2s ease-out;
+}
+
+@keyframes true-cost-modal-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.true-cost-modal-header {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  color: white;
+  padding: 16px 20px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.true-cost-modal-body {
+  padding: 20px;
+}
+
+.true-cost-modal-body p {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.true-cost-modal-highlight {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border: 2px solid #ff9800;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.true-cost-modal-price {
+  font-size: 20px;
+  font-weight: 600;
+  color: #e65100;
+}
+
+.true-cost-modal-arrow {
+  font-size: 20px;
+  margin: 8px 0;
+  color: #ff9800;
+}
+
+.true-cost-modal-future {
+  font-size: 16px;
+  color: #bf360c;
+}
+
+.true-cost-modal-future strong {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.true-cost-modal-question {
+  font-weight: 500;
+  color: #1a1a1a !important;
+  font-size: 16px;
+}
+
+.true-cost-modal-subtext {
+  color: #666 !important;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.true-cost-modal-buttons {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px 20px;
+}
+
+.true-cost-modal-buttons button {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.true-cost-modal-cancel {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.true-cost-modal-cancel:hover {
+  background: #e0e0e0;
+}
+
+.true-cost-modal-confirm {
+  background: #ff9800;
+  border: none;
+  color: white;
+}
+
+.true-cost-modal-confirm:hover {
+  background: #f57c00;
+}
+
+/* Stacked buttons for want/need */
+.true-cost-modal-buttons-stacked {
+  flex-direction: column;
+}
+
+.true-cost-modal-need {
+  background: #4caf50;
+  border: none;
+  color: white;
+}
+
+.true-cost-modal-need:hover {
+  background: #43a047;
+}
+
+.true-cost-modal-want {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.true-cost-modal-want:hover {
+  background: #e0e0e0;
+}
+
+/* Skip & Save button */
+.true-cost-modal-skip {
+  background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+}
+
+.true-cost-modal-skip:hover {
+  background: linear-gradient(135deg, #43a047 0%, #388e3c 100%);
+}
+
+.true-cost-modal-buy-anyway {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #666;
+  font-size: 13px;
+}
+
+.true-cost-modal-buy-anyway:hover {
+  background: #e0e0e0;
+}
+
+/* Saved confirmation */
+.true-cost-modal-saved {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.true-cost-modal-saved-label {
+  font-size: 14px;
+  color: #558b2f;
+  margin-bottom: 4px;
+}
+
+.true-cost-modal-saved-amount {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.true-cost-modal-total {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.true-cost-modal-total strong {
+  color: #2e7d32;
+}
+
+.true-cost-modal-close {
+  background: #4caf50;
+  border: none;
+  color: white;
+  width: 100%;
+}
+
+.true-cost-modal-close:hover {
+  background: #43a047;
+}

@@ -1,9 +1,13 @@
 {
   "manifest_version": 3,
   "name": "True Cost Calculator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "See the true opportunity cost of purchases - what your money could be worth if invested instead",
-  "permissions": ["storage"],
+  "permissions": ["storage", "identity", "alarms"],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://*.supabase.co/*"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -34,8 +38,14 @@
         "*://*.amazon.co.jp/*",
         "*://*.amazon.com.au/*"
       ],
-      "js": ["content.js"],
+      "js": ["lib/supabase.js", "content.js"],
       "css": ["content.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["auth.html"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
