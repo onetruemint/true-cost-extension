@@ -1,38 +1,38 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Settings elements
-  const enableToggle = document.getElementById('enableToggle');
-  const confirmToggle = document.getElementById('confirmToggle');
-  const returnRateInput = document.getElementById('returnRate');
-  const yearsInput = document.getElementById('years');
-  const minPriceInput = document.getElementById('minPrice');
-  const saveBtn = document.getElementById('saveBtn');
-  const status = document.getElementById('status');
-  const exampleResult = document.getElementById('exampleResult');
-  const savingsDisplay = document.getElementById('savingsDisplay');
-  const savingsAmount = document.getElementById('savingsAmount');
-  const savingsCount = document.getElementById('savingsCount');
-  const timeFilters = document.getElementById('timeFilters');
+  const enableToggle = document.getElementById("enableToggle");
+  const confirmToggle = document.getElementById("confirmToggle");
+  const returnRateInput = document.getElementById("returnRate");
+  const yearsInput = document.getElementById("years");
+  const minPriceInput = document.getElementById("minPrice");
+  const saveBtn = document.getElementById("saveBtn");
+  const status = document.getElementById("status");
+  const exampleResult = document.getElementById("exampleResult");
+  const savingsDisplay = document.getElementById("savingsDisplay");
+  const savingsAmount = document.getElementById("savingsAmount");
+  const savingsCount = document.getElementById("savingsCount");
+  const timeFilters = document.getElementById("timeFilters");
 
   // Auth elements
-  const loggedOutView = document.getElementById('loggedOutView');
-  const loggedInView = document.getElementById('loggedInView');
-  const userEmail = document.getElementById('userEmail');
-  const authForm = document.getElementById('authForm');
-  const authEmail = document.getElementById('authEmail');
-  const authPassword = document.getElementById('authPassword');
-  const authSubmit = document.getElementById('authSubmit');
-  const authError = document.getElementById('authError');
-  const authTabs = document.querySelectorAll('.auth-tab');
-  const googleSignIn = document.getElementById('googleSignIn');
-  const signOutBtn = document.getElementById('signOutBtn');
+  const loggedOutView = document.getElementById("loggedOutView");
+  const loggedInView = document.getElementById("loggedInView");
+  const userEmail = document.getElementById("userEmail");
+  const authForm = document.getElementById("authForm");
+  const authEmail = document.getElementById("authEmail");
+  const authPassword = document.getElementById("authPassword");
+  const authSubmit = document.getElementById("authSubmit");
+  const authError = document.getElementById("authError");
+  const authTabs = document.querySelectorAll(".auth-tab");
+  const googleSignIn = document.getElementById("googleSignIn");
+  const signOutBtn = document.getElementById("signOutBtn");
 
   // Best variant elements
-  const bestVariant = document.getElementById('bestVariant');
-  const bestVariantText = document.getElementById('bestVariantText');
-  const bestVariantStats = document.getElementById('bestVariantStats');
+  const bestVariant = document.getElementById("bestVariant");
+  const bestVariantText = document.getElementById("bestVariantText");
+  const bestVariantStats = document.getElementById("bestVariantStats");
 
   let isSignUp = false;
-  let currentPeriod = 'today';
+  let currentPeriod = "today";
 
   // Default settings
   const defaults = {
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     years: 10,
     minPrice: 10,
     totalSaved: 0,
-    skippedItems: []
+    skippedItems: [],
   };
 
   // Initialize
@@ -67,14 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateAuthUI(user) {
     if (user) {
-      loggedOutView.style.display = 'none';
-      loggedInView.style.display = 'block';
+      loggedOutView.style.display = "none";
+      loggedInView.style.display = "block";
       userEmail.textContent = user.email;
-      timeFilters.style.display = 'flex';
+      timeFilters.style.display = "flex";
     } else {
-      loggedOutView.style.display = 'block';
-      loggedInView.style.display = 'none';
-      timeFilters.style.display = 'none';
+      loggedOutView.style.display = "block";
+      loggedInView.style.display = "none";
+      timeFilters.style.display = "none";
     }
   }
 
@@ -115,80 +115,89 @@ document.addEventListener('DOMContentLoaded', () => {
       // Load from Supabase based on selected period
       let savings;
       switch (currentPeriod) {
-        case 'today':
+        case "today":
           savings = await window.supabase.getTodaySavings();
           break;
-        case 'week':
+        case "week":
           savings = await window.supabase.getWeekSavings();
           break;
-        case 'month':
+        case "month":
           savings = await window.supabase.getMonthSavings();
           break;
-        case 'ytd':
+        case "ytd":
           savings = await window.supabase.getYTDSavings();
           break;
-        case 'all':
+        case "all":
           savings = await window.supabase.getAllTimeSavings();
           break;
         default:
           savings = await window.supabase.getAllTimeSavings();
       }
 
-      savingsAmount.textContent = '$' + savings.total.toFixed(2);
+      savingsAmount.textContent = "$" + savings.total.toFixed(2);
       if (savings.count > 0) {
-        savingsCount.textContent = `${savings.count} purchase${savings.count !== 1 ? 's' : ''} skipped`;
-        savingsCount.style.display = 'block';
+        savingsCount.textContent = `${savings.count} purchase${
+          savings.count !== 1 ? "s" : ""
+        } skipped`;
+        savingsCount.style.display = "block";
       } else {
-        savingsCount.style.display = 'none';
+        savingsCount.style.display = "none";
       }
     } else {
       // Load from local storage
-      chrome.storage.local.get({ totalSaved: 0, skippedItems: [] }, (result) => {
-        savingsAmount.textContent = '$' + result.totalSaved.toFixed(2);
-        if (result.skippedItems.length > 0) {
-          savingsCount.textContent = `${result.skippedItems.length} purchase${result.skippedItems.length !== 1 ? 's' : ''} skipped`;
-          savingsCount.style.display = 'block';
-        } else {
-          savingsCount.style.display = 'none';
+      chrome.storage.local.get(
+        { totalSaved: 0, skippedItems: [] },
+        (result) => {
+          savingsAmount.textContent = "$" + result.totalSaved.toFixed(2);
+          if (result.skippedItems.length > 0) {
+            savingsCount.textContent = `${result.skippedItems.length} purchase${
+              result.skippedItems.length !== 1 ? "s" : ""
+            } skipped`;
+            savingsCount.style.display = "block";
+          } else {
+            savingsCount.style.display = "none";
+          }
         }
-      });
+      );
     }
   }
 
   async function loadBestVariant() {
     const best = await window.supabase.getMostEffectiveVariant();
     if (best && best.question_variants) {
-      bestVariant.style.display = 'block';
+      bestVariant.style.display = "block";
       bestVariantText.textContent = `"${best.question_variants.question_text}"`;
-      const skipRate = ((best.times_skipped / best.times_shown) * 100).toFixed(0);
+      const skipRate = ((best.times_skipped / best.times_shown) * 100).toFixed(
+        0
+      );
       bestVariantStats.textContent = `${skipRate}% skip rate (${best.times_skipped}/${best.times_shown} times)`;
     }
   }
 
   function updateSavingsDisplay(total, showDisplay) {
-    savingsDisplay.style.display = showDisplay ? 'block' : 'none';
-    if (typeof total === 'number') {
-      savingsAmount.textContent = '$' + total.toFixed(2);
+    savingsDisplay.style.display = showDisplay ? "block" : "none";
+    if (typeof total === "number") {
+      savingsAmount.textContent = "$" + total.toFixed(2);
     }
   }
 
   // Auth tab switching
-  authTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      authTabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      isSignUp = tab.dataset.tab === 'signup';
-      authSubmit.textContent = isSignUp ? 'Sign Up' : 'Sign In';
-      authError.textContent = '';
+  authTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      authTabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      isSignUp = tab.dataset.tab === "signup";
+      authSubmit.textContent = isSignUp ? "Sign Up" : "Sign In";
+      authError.textContent = "";
     });
   });
 
   // Email/Password auth
-  authForm.addEventListener('submit', async (e) => {
+  authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    authError.textContent = '';
+    authError.textContent = "";
     authSubmit.disabled = true;
-    authSubmit.textContent = isSignUp ? 'Signing up...' : 'Signing in...';
+    authSubmit.textContent = isSignUp ? "Signing up..." : "Signing in...";
 
     try {
       const email = authEmail.value;
@@ -202,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (result.error) {
-        throw new Error(result.error.message || 'Authentication failed');
+        throw new Error(result.error.message || "Authentication failed");
       }
 
       updateAuthUI(result.user);
@@ -212,49 +221,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Notify background script
       chrome.runtime.sendMessage({
-        action: 'authStateChanged',
-        user: result.user
+        action: "authStateChanged",
+        user: result.user,
       });
-
     } catch (err) {
       authError.textContent = err.message;
     } finally {
       authSubmit.disabled = false;
-      authSubmit.textContent = isSignUp ? 'Sign Up' : 'Sign In';
+      authSubmit.textContent = isSignUp ? "Sign Up" : "Sign In";
     }
   });
 
   // Google OAuth
-  googleSignIn.addEventListener('click', () => {
-    const redirectUrl = chrome.runtime.getURL('auth.html');
-    const authUrl = window.supabase.getGoogleOAuthUrl(redirectUrl);
-    chrome.tabs.create({ url: authUrl });
+  googleSignIn.addEventListener("click", async () => {
+    const redirectUrl = chrome.runtime.getURL("auth.html");
+    const authUrl = await window.supabase.getGoogleOAuthUrl(redirectUrl);
+    chrome.tabs.create(String(authUrl));
   });
 
   // Sign out
-  signOutBtn.addEventListener('click', async () => {
+  signOutBtn.addEventListener("click", async () => {
     await window.supabase.signOut();
     updateAuthUI(null);
     await loadSettings();
     await loadSavings();
-    bestVariant.style.display = 'none';
+    bestVariant.style.display = "none";
 
     // Notify background script
-    chrome.runtime.sendMessage({ action: 'authStateChanged', user: null });
+    chrome.runtime.sendMessage({ action: "authStateChanged", user: null });
   });
 
   // Time filter buttons
-  timeFilters.addEventListener('click', async (e) => {
-    if (e.target.classList.contains('time-filter')) {
-      document.querySelectorAll('.time-filter').forEach(btn => btn.classList.remove('active'));
-      e.target.classList.add('active');
+  timeFilters.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("time-filter")) {
+      document
+        .querySelectorAll(".time-filter")
+        .forEach((btn) => btn.classList.remove("active"));
+      e.target.classList.add("active");
       currentPeriod = e.target.dataset.period;
       await loadSavings();
     }
   });
 
   // Update display when toggle changes
-  confirmToggle.addEventListener('change', async () => {
+  confirmToggle.addEventListener("change", async () => {
     updateSavingsDisplay(null, confirmToggle.checked);
     if (confirmToggle.checked) {
       await loadSavings();
@@ -262,14 +272,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Update example on input change
-  returnRateInput.addEventListener('input', updateExample);
-  yearsInput.addEventListener('input', updateExample);
+  returnRateInput.addEventListener("input", updateExample);
+  yearsInput.addEventListener("input", updateExample);
 
   function updateExample() {
     const rate = parseFloat(returnRateInput.value) / 100;
     const years = parseInt(yearsInput.value);
     const futureValue = calculateFutureValue(100, rate, years);
-    exampleResult.textContent = `True cost: $${futureValue.toFixed(0)} in ${years} years`;
+    exampleResult.textContent = `True cost: $${futureValue.toFixed(
+      0
+    )} in ${years} years`;
   }
 
   function calculateFutureValue(presentValue, annualRate, years) {
@@ -277,31 +289,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Save settings
-  saveBtn.addEventListener('click', async () => {
+  saveBtn.addEventListener("click", async () => {
     const settings = {
       enabled: enableToggle.checked,
       confirmBeforePurchase: confirmToggle.checked,
       returnRate: parseFloat(returnRateInput.value),
       years: parseInt(yearsInput.value),
-      minPrice: parseFloat(minPriceInput.value) || 0
+      minPrice: parseFloat(minPriceInput.value) || 0,
     };
 
     // Save to local storage
     chrome.storage.local.set(settings, () => {
-      status.textContent = 'Settings saved!';
+      status.textContent = "Settings saved!";
       setTimeout(() => {
-        status.textContent = '';
+        status.textContent = "";
       }, 2000);
 
       // Notify content scripts
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs[0]) {
-          chrome.tabs.sendMessage(tabs[0].id, {
-            action: 'settingsUpdated',
-            settings: settings
-          }).catch(() => {
-            // Tab might not have content script
-          });
+          chrome.tabs
+            .sendMessage(tabs[0].id, {
+              action: "settingsUpdated",
+              settings: settings,
+            })
+            .catch(() => {
+              // Tab might not have content script
+            });
         }
       });
     });
@@ -313,28 +327,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Quick toggle
-  enableToggle.addEventListener('change', () => {
+  enableToggle.addEventListener("change", () => {
     chrome.storage.local.set({ enabled: enableToggle.checked });
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]) {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          action: 'toggle',
-          enabled: enableToggle.checked
-        }).catch(() => {});
+        chrome.tabs
+          .sendMessage(tabs[0].id, {
+            action: "toggle",
+            enabled: enableToggle.checked,
+          })
+          .catch(() => {});
       }
     });
   });
 
   // Listen for auth state changes from other parts of extension
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === 'authStateChanged') {
+    if (message.action === "authStateChanged") {
       updateAuthUI(message.user);
       loadSettings();
       loadSavings();
       if (message.user) {
         loadBestVariant();
       } else {
-        bestVariant.style.display = 'none';
+        bestVariant.style.display = "none";
       }
     }
     sendResponse({ success: true });
