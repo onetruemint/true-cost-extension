@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #00a86b;
+  --primary-hover: #009960;
+  --primary-light: #e8f5e9;
+  --primary-lighter: #c8e6c9;
+  --savings-dark: #2e7d32;
+  --savings-medium: #558b2f;
+  --savings-border: #81c784;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+  --color-primary-lighter: var(--primary-lighter);
+  --color-savings-dark: var(--savings-dark);
+  --color-savings-medium: var(--savings-medium);
+  --color-savings-border: var(--savings-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
