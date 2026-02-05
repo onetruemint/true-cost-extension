@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("");
@@ -71,66 +71,83 @@ export default function AuthCallbackPage() {
   }, [searchParams]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[--mint] to-[--white] flex items-center justify-center px-4">
+    <div className="bg-offwhite rounded-xl shadow-xl border border-primary/20 p-8">
+      {status === "loading" && (
+        <>
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <h1 className="text-xl font-semibold text-dark">Completing sign in...</h1>
+        </>
+      )}
+
+      {status === "success" && (
+        <>
+          <div className="w-16 h-16 bg-mint rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg
+              viewBox="0 0 24 24"
+              width="32"
+              height="32"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              className="text-primary"
+            >
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </div>
+          <h1 className="text-xl font-semibold text-dark mb-2">Success!</h1>
+          <p className="text-dark/70">{message}</p>
+        </>
+      )}
+
+      {status === "error" && (
+        <>
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg
+              viewBox="0 0 24 24"
+              width="32"
+              height="32"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="text-red-500"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M15 9l-6 6M9 9l6 6" />
+            </svg>
+          </div>
+          <h1 className="text-xl font-semibold text-dark mb-2">Sign in failed</h1>
+          <p className="text-red-600">{message}</p>
+          <Link
+            href="/signin"
+            className="inline-block mt-4 px-6 py-2 bg-primary text-offwhite rounded-lg font-medium hover:bg-primary-hover transition-colors"
+          >
+            Try again
+          </Link>
+        </>
+      )}
+    </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="bg-offwhite rounded-xl shadow-xl border border-primary/20 p-8">
+      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <h1 className="text-xl font-semibold text-dark text-center">Loading...</h1>
+    </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-mint to-white flex items-center justify-center px-4">
       <div className="w-full max-w-md text-center">
-        <div className="bg-[--white] rounded-xl shadow-xl border border-[--primary]/20 p-8">
-          {status === "loading" && (
-            <>
-              <div className="w-12 h-12 border-4 border-[--primary] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <h1 className="text-xl font-semibold text-[--black]">Completing sign in...</h1>
-            </>
-          )}
-
-          {status === "success" && (
-            <>
-              <div className="w-16 h-16 bg-[--mint] rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="32"
-                  height="32"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  className="text-[--primary]"
-                >
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
-              </div>
-              <h1 className="text-xl font-semibold text-[--black] mb-2">Success!</h1>
-              <p className="text-[--black]/70">{message}</p>
-            </>
-          )}
-
-          {status === "error" && (
-            <>
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="32"
-                  height="32"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="text-red-500"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M15 9l-6 6M9 9l6 6" />
-                </svg>
-              </div>
-              <h1 className="text-xl font-semibold text-[--black] mb-2">Sign in failed</h1>
-              <p className="text-red-600">{message}</p>
-              <Link
-                href="/signin"
-                className="inline-block mt-4 px-6 py-2 bg-[--primary] text-[--white] rounded-lg font-medium hover:bg-[--primary-hover] transition-colors"
-              >
-                Try again
-              </Link>
-            </>
-          )}
-        </div>
+        <Suspense fallback={<LoadingFallback />}>
+          <AuthCallbackContent />
+        </Suspense>
 
         <p className="mt-6">
-          <Link href="/" className="text-[--primary] hover:underline text-sm font-medium">
+          <Link href="/" className="text-primary hover:underline text-sm font-medium">
             ← Back to home
           </Link>
         </p>

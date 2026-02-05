@@ -23,12 +23,12 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 bg-[--white]">
+    <section id="how-it-works" className="py-24 bg-offwhite">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-3">
           How It Works
         </h2>
-        <p className="text-lg text-[--black]/70 text-center max-w-2xl mx-auto mb-12">
+        <p className="text-lg text-dark/70 text-center max-w-2xl mx-auto mb-12">
           Simple math, powerful insight. The True Cost Calculator uses compound
           interest to show opportunity cost.
         </p>
@@ -36,11 +36,11 @@ export default function HowItWorks() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {steps.map((step) => (
             <div key={step.number} className="text-center">
-              <div className="w-12 h-12 bg-[--primary] text-[--white] rounded-full flex items-center justify-center text-xl font-semibold mx-auto mb-5">
+              <div className="w-12 h-12 bg-primary text-offwhite rounded-full flex items-center justify-center text-xl font-semibold mx-auto mb-5">
                 {step.number}
               </div>
               <h3 className="text-base font-semibold mb-2">{step.title}</h3>
-              <p className="text-sm text-[--black]/70">{step.description}</p>
+              <p className="text-sm text-dark/70">{step.description}</p>
             </div>
           ))}
         </div>

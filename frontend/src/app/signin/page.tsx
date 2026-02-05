@@ -62,10 +62,10 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[--mint] to-[--white] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-b from-mint to-white flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2.5 text-xl font-semibold text-[--black]">
+          <Link href="/" className="inline-flex items-center gap-2.5 text-xl font-semibold text-dark">
             <svg
               viewBox="0 0 24 24"
               width="32"
@@ -73,7 +73,7 @@ export default function SignInPage() {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className="text-[--primary]"
+              className="text-primary"
             >
               <circle cx="12" cy="12" r="10" />
               <path d="M12 6v6l4 2" />
@@ -82,11 +82,11 @@ export default function SignInPage() {
           </Link>
         </div>
 
-        <div className="bg-[--white] rounded-xl shadow-xl border border-[--primary]/20 p-8">
-          <h1 className="text-2xl font-bold text-[--black] text-center mb-2">
+        <div className="bg-offwhite rounded-xl shadow-xl border border-primary/20 p-8">
+          <h1 className="text-2xl font-bold text-dark text-center mb-2">
             {isSignUp ? "Create an account" : "Welcome back"}
           </h1>
-          <p className="text-[--black]/60 text-center mb-6">
+          <p className="text-dark/60 text-center mb-6">
             {isSignUp
               ? "Sign up to sync your savings across devices"
               : "Sign in to access your savings data"}
@@ -98,8 +98,8 @@ export default function SignInPage() {
               onClick={() => setIsSignUp(false)}
               className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
                 !isSignUp
-                  ? "bg-[--primary] text-[--white]"
-                  : "bg-[--mint] text-[--black] hover:bg-[--primary]/20"
+                  ? "bg-primary text-offwhite"
+                  : "bg-mint text-dark hover:bg-primary/20"
               }`}
             >
               Sign In
@@ -108,8 +108,8 @@ export default function SignInPage() {
               onClick={() => setIsSignUp(true)}
               className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
                 isSignUp
-                  ? "bg-[--primary] text-[--white]"
-                  : "bg-[--mint] text-[--black] hover:bg-[--primary]/20"
+                  ? "bg-primary text-offwhite"
+                  : "bg-mint text-dark hover:bg-primary/20"
               }`}
             >
               Sign Up
@@ -119,7 +119,7 @@ export default function SignInPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[--black] mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-dark mb-1">
                 Email
               </label>
               <input
@@ -128,13 +128,13 @@ export default function SignInPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-[--black]/20 focus:outline-none focus:ring-2 focus:ring-[--primary] focus:border-transparent bg-white"
+                className="w-full px-4 py-3 rounded-lg border border-dark/20 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white"
                 placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[--black] mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-dark mb-1">
                 Password
               </label>
               <input
@@ -144,7 +144,7 @@ export default function SignInPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full px-4 py-3 rounded-lg border border-[--black]/20 focus:outline-none focus:ring-2 focus:ring-[--primary] focus:border-transparent bg-white"
+                className="w-full px-4 py-3 rounded-lg border border-dark/20 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white"
                 placeholder="••••••••"
               />
             </div>
@@ -156,7 +156,7 @@ export default function SignInPage() {
             )}
 
             {success && (
-              <div className="p-3 rounded-lg bg-[--mint] border border-[--primary]/30 text-[--primary] text-sm">
+              <div className="p-3 rounded-lg bg-mint border border-primary/30 text-primary text-sm">
                 {success}
               </div>
             )}
@@ -164,7 +164,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-[--primary] hover:bg-[--primary-hover] text-[--white] rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 bg-primary hover:bg-primary-hover text-offwhite rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading
                 ? isSignUp
@@ -178,15 +178,15 @@ export default function SignInPage() {
 
           {/* Divider */}
           <div className="flex items-center my-6">
-            <div className="flex-1 border-t border-[--black]/10"></div>
-            <span className="px-4 text-sm text-[--black]/50">or</span>
-            <div className="flex-1 border-t border-[--black]/10"></div>
+            <div className="flex-1 border-t border-dark/10"></div>
+            <span className="px-4 text-sm text-dark/50">or</span>
+            <div className="flex-1 border-t border-dark/10"></div>
           </div>
 
           {/* Google Sign In */}
           <button
             onClick={handleGoogleSignIn}
-            className="w-full py-3 px-4 bg-white border border-[--black]/20 rounded-lg font-medium text-[--black] hover:bg-[--mint] transition-colors flex items-center justify-center gap-3"
+            className="w-full py-3 px-4 bg-white border border-dark/20 rounded-lg font-medium text-dark hover:bg-mint transition-colors flex items-center justify-center gap-3"
           >
             <svg viewBox="0 0 24 24" width="20" height="20">
               <path
@@ -210,14 +210,14 @@ export default function SignInPage() {
           </button>
 
           {/* Extension hint */}
-          <p className="mt-6 text-center text-sm text-[--black]/50">
+          <p className="mt-6 text-center text-sm text-dark/50">
             After signing in, return to the extension to see your synced data.
           </p>
         </div>
 
         {/* Back to home */}
         <p className="text-center mt-6">
-          <Link href="/" className="text-[--primary] hover:underline text-sm font-medium">
+          <Link href="/" className="text-primary hover:underline text-sm font-medium">
             ← Back to home
           </Link>
         </p>
