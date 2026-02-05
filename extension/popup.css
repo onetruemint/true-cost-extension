@@ -1,3 +1,20 @@
+:root {
+  /* Base palette */
+  --white: #f5f5f5;
+  --mint: #d5f3ed;
+  --black: #1e1e1e;
+
+  /* Primary colors */
+  --primary: #00a86b;
+  --primary-hover: #009960;
+  --primary-light: var(--mint);
+
+  /* Savings colors */
+  --savings-dark: #2e7d32;
+  --savings-medium: #558b2f;
+  --savings-border: #81c784;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,7 +24,7 @@
 body {
   width: 320px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: #f8f9fa;
+  background: var(--white);
 }
 
 .container {
@@ -16,7 +33,7 @@ body {
 
 h1 {
   font-size: 18px;
-  color: #1a1a1a;
+  color: var(--black);
   margin-bottom: 4px;
 }
 
@@ -67,13 +84,13 @@ h1 {
   width: 18px;
   left: 3px;
   bottom: 3px;
-  background-color: white;
+  background-color: var(--white);
   transition: 0.3s;
   border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #00a86b;
+  background-color: var(--primary);
 }
 
 input:checked + .slider:before {
@@ -81,8 +98,8 @@ input:checked + .slider:before {
 }
 
 .savings-display {
-  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-  border: 1px solid #81c784;
+  background: linear-gradient(135deg, var(--mint) 0%, #c8e6c9 100%);
+  border: 1px solid var(--savings-border);
   border-radius: 8px;
   padding: 12px;
   margin-top: 12px;
@@ -92,14 +109,14 @@ input:checked + .slider:before {
 
 .savings-label {
   font-size: 11px;
-  color: #558b2f;
+  color: var(--savings-medium);
   margin-bottom: 4px;
 }
 
 .savings-amount {
   font-size: 24px;
   font-weight: 700;
-  color: #2e7d32;
+  color: var(--savings-dark);
 }
 
 .settings {
@@ -115,7 +132,7 @@ input:checked + .slider:before {
   display: block;
   font-size: 13px;
   font-weight: 500;
-  color: #333;
+  color: var(--black);
   margin-bottom: 6px;
 }
 
@@ -135,7 +152,7 @@ input:checked + .slider:before {
 
 .input-row input:focus {
   outline: none;
-  border-color: #00a86b;
+  border-color: var(--primary);
 }
 
 .unit {
@@ -150,7 +167,7 @@ input:checked + .slider:before {
 }
 
 .example {
-  background: #e8f5e9;
+  background: var(--mint);
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 16px;
@@ -165,14 +182,14 @@ input:checked + .slider:before {
 .example-result {
   font-size: 15px;
   font-weight: 600;
-  color: #00a86b;
+  color: var(--primary);
 }
 
 button {
   width: 100%;
   padding: 12px 16px;
-  background: #00a86b;
-  color: white;
+  background: var(--primary);
+  color: var(--white);
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -182,13 +199,13 @@ button {
 }
 
 button:hover {
-  background: #009960;
+  background: var(--primary-hover);
 }
 
 .status {
   text-align: center;
   font-size: 12px;
-  color: #00a86b;
+  color: var(--primary);
   margin-top: 8px;
   min-height: 16px;
 }
@@ -207,116 +224,30 @@ button:hover {
   text-align: center;
 }
 
-.auth-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.auth-tab {
-  flex: 1;
-  padding: 8px;
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.auth-tab:hover {
-  background: #e8e8e8;
-}
-
-.auth-tab.active {
-  background: #00a86b;
-  color: white;
-  border-color: #00a86b;
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.auth-form input {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.auth-form input:focus {
-  outline: none;
-  border-color: #00a86b;
-}
-
-.auth-submit {
-  padding: 10px 16px;
-  background: #00a86b;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.auth-submit:hover {
-  background: #009960;
-}
-
-.auth-submit:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.auth-divider {
-  display: flex;
-  align-items: center;
-  margin: 12px 0;
-}
-
-.auth-divider::before,
-.auth-divider::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid #ddd;
-}
-
-.auth-divider span {
-  padding: 0 12px;
-  color: #888;
-  font-size: 12px;
-}
-
-.google-btn {
+.sign-in-link {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 10px 16px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 12px 16px;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
   font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
   cursor: pointer;
   transition: background 0.2s;
 }
 
-.google-btn:hover {
-  background: #f5f5f5;
+.sign-in-link:hover {
+  background: var(--primary-hover);
 }
 
-.auth-error {
-  color: #c62828;
-  font-size: 12px;
-  margin-top: 8px;
-  text-align: center;
-  min-height: 16px;
+.sign-in-link svg {
+  flex-shrink: 0;
 }
 
 .user-info {
@@ -328,7 +259,7 @@ button:hover {
 
 .user-info span {
   font-size: 13px;
-  color: #333;
+  color: var(--black);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -337,7 +268,7 @@ button:hover {
 
 .sign-out-btn {
   padding: 6px 12px;
-  background: #f5f5f5;
+  background: var(--white);
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 12px;
@@ -346,7 +277,7 @@ button:hover {
 }
 
 .sign-out-btn:hover {
-  background: #e0e0e0;
+  background: var(--mint);
 }
 
 /* Time Filters */
@@ -360,16 +291,16 @@ button:hover {
 .time-filter {
   padding: 4px 8px;
   background: transparent;
-  border: 1px solid #81c784;
+  border: 1px solid var(--savings-border);
   border-radius: 4px;
   font-size: 11px;
-  color: #558b2f;
+  color: var(--savings-medium);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .time-filter:hover {
-  background: rgba(129, 199, 132, 0.2);
+  background: var(--mint);
 }
 
 .time-filter.active {
@@ -380,7 +311,7 @@ button:hover {
 
 .savings-count {
   font-size: 11px;
-  color: #558b2f;
+  color: var(--savings-medium);
   margin-top: 4px;
   display: none;
 }

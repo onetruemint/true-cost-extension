@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="py-10 bg-black text-white">
+    <footer className="py-10 bg-[--black] text-[--white]">
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2.5 font-semibold">
@@ -22,18 +22,18 @@ export default function Footer() {
           </div>
 
           <div className="flex gap-8">
-            <Link href="#" className="text-sm text-white/70 hover:text-white transition-colors">
+            <Link href="#" className="text-sm text-[--mint] hover:text-[--white] transition-colors">
               Privacy Policy
             </Link>
-            <Link href="#" className="text-sm text-white/70 hover:text-white transition-colors">
+            <Link href="#" className="text-sm text-[--mint] hover:text-[--white] transition-colors">
               Terms of Service
             </Link>
-            <Link href="#" className="text-sm text-white/70 hover:text-white transition-colors">
+            <Link href="#" className="text-sm text-[--mint] hover:text-[--white] transition-colors">
               Contact
             </Link>
           </div>
 
-          <div className="text-sm text-white/50">
+          <div className="text-sm text-[--white]/50">
             &copy; {new Date().getFullYear()} True Cost Calculator. All rights reserved.
           </div>
         </div>

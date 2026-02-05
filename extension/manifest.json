@@ -6,7 +6,9 @@
   "permissions": ["storage", "identity", "alarms"],
   "host_permissions": [
     "http://localhost:3000/*",
-    "https://*.supabase.co/*"
+    "http://localhost:3001/*",
+    "https://*.supabase.co/*",
+    "https://truecostcalculator.com/*"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -40,6 +42,13 @@
       ],
       "js": ["lib/supabase.js", "content.js"],
       "css": ["content.css"]
+    },
+    {
+      "matches": [
+        "http://localhost:3001/*",
+        "https://truecostcalculator.com/*"
+      ],
+      "js": ["auth-sync.js"]
     }
   ],
   "web_accessible_resources": [

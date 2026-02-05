@@ -49,6 +49,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true; // Keep channel open for async response
   }
 
+  if (message.action === 'syncAuthFromFrontend') {
+    // Received auth tokens from frontend via content script
+    const { accessToken, refreshToken, user } = message;
+
+    if (accessToken && refreshToken) {
+      chrome.storage.local.set({
+        api_access_token: accessToken,
+        api_refresh_token: refreshToken,
+        api_user: user
+      }, () => {
+        console.log('Auth synced from frontend');
+        // Broadcast to all extension pages
+        broadcastAuthState(user);
+      });
+    }
+    sendResponse({ success: true });
+  }
+
   return false;
 });
 

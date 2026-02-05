@@ -63,12 +63,12 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="py-24 bg-gray-50">
+    <section id="features" className="py-24 bg-[--mint]/50">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-3">
           Make Smarter Spending Decisions
         </h2>
-        <p className="text-lg text-gray-600 text-center max-w-2xl mx-auto mb-12">
+        <p className="text-lg text-[--black]/70 text-center max-w-2xl mx-auto mb-12">
           Every purchase has a hidden cost - the growth you could have earned by
           investing that money instead.
         </p>
@@ -77,13 +77,13 @@ export default function Features() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="bg-white p-8 rounded-lg border border-gray-200 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+              className="bg-[--white] p-8 rounded-lg border border-[--primary]/20 hover:shadow-lg hover:-translate-y-0.5 transition-all"
             >
               <div className="w-14 h-14 bg-[--primary-light] rounded-lg flex items-center justify-center mb-5 text-[--primary]">
                 {feature.icon}
               </div>
               <h3 className="text-lg font-semibold mb-3">{feature.title}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-sm text-[--black]/70 leading-relaxed">
                 {feature.description}
               </p>
             </div>

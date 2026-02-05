@@ -17,13 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loggedOutView = document.getElementById("loggedOutView");
   const loggedInView = document.getElementById("loggedInView");
   const userEmail = document.getElementById("userEmail");
-  const authForm = document.getElementById("authForm");
-  const authEmail = document.getElementById("authEmail");
-  const authPassword = document.getElementById("authPassword");
-  const authSubmit = document.getElementById("authSubmit");
-  const authError = document.getElementById("authError");
-  const authTabs = document.querySelectorAll(".auth-tab");
-  const googleSignIn = document.getElementById("googleSignIn");
+  const signInLink = document.getElementById("signInLink");
   const signOutBtn = document.getElementById("signOutBtn");
 
   // Best variant elements
@@ -31,7 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const bestVariantText = document.getElementById("bestVariantText");
   const bestVariantStats = document.getElementById("bestVariantStats");
 
-  let isSignUp = false;
+  // Frontend URL for auth
+  const FRONTEND_URL = "http://localhost:3001";
+
   let currentPeriod = "today";
 
   // Default settings
@@ -181,62 +177,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Auth tab switching
-  authTabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      authTabs.forEach((t) => t.classList.remove("active"));
-      tab.classList.add("active");
-      isSignUp = tab.dataset.tab === "signup";
-      authSubmit.textContent = isSignUp ? "Sign Up" : "Sign In";
-      authError.textContent = "";
-    });
-  });
-
-  // Email/Password auth
-  authForm.addEventListener("submit", async (e) => {
+  // Sign in link - opens frontend auth page
+  signInLink.addEventListener("click", (e) => {
     e.preventDefault();
-    authError.textContent = "";
-    authSubmit.disabled = true;
-    authSubmit.textContent = isSignUp ? "Signing up..." : "Signing in...";
-
-    try {
-      const email = authEmail.value;
-      const password = authPassword.value;
-
-      let result;
-      if (isSignUp) {
-        result = await window.supabase.signUp(email, password);
-      } else {
-        result = await window.supabase.signIn(email, password);
-      }
-
-      if (result.error) {
-        throw new Error(result.error.message || "Authentication failed");
-      }
-
-      updateAuthUI(result.user);
-      await loadSettings();
-      await loadSavings();
-      await loadBestVariant();
-
-      // Notify background script
-      chrome.runtime.sendMessage({
-        action: "authStateChanged",
-        user: result.user,
-      });
-    } catch (err) {
-      authError.textContent = err.message;
-    } finally {
-      authSubmit.disabled = false;
-      authSubmit.textContent = isSignUp ? "Sign Up" : "Sign In";
-    }
-  });
-
-  // Google OAuth
-  googleSignIn.addEventListener("click", async () => {
-    const redirectUrl = chrome.runtime.getURL("auth.html");
-    const authUrl = await window.supabase.getGoogleOAuthUrl(redirectUrl);
-    chrome.tabs.create(String(authUrl));
+    chrome.tabs.create({ url: `${FRONTEND_URL}/signin` });
   });
 
   // Sign out
