@@ -218,7 +218,7 @@ app.get("/auth/google/url", (req, res) => {
     redirect_to: redirect_to,
   });
 
-  const authUrl = `${SAVEST_URL}/auth/v1/authorize?${params.toString()}`;
+  const authUrl = `${SUPABASE_URL}/auth/v1/authorize?${params.toString()}`;
   res.json({ url: authUrl });
 });
 
