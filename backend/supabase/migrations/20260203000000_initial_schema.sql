@@ -1,4 +1,4 @@
--- True Cost Calculator: Initial Schema Migration
+-- Savest: Initial Schema Migration
 -- Creates tables for user settings, question variants, savings records, and effectiveness tracking
 
 -- 1. user_settings: Store user preferences (synced across devices)

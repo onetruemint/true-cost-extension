@@ -1,4 +1,4 @@
--- Seed data for True Cost Calculator
+-- Seed data for Savest
 -- Question variants for A/B testing
 
 INSERT INTO question_variants (question_text, subtext) VALUES
