@@ -124,6 +124,8 @@ class TrueCostAPI {
       "api_user",
     ]);
 
+    console.log("[Savest] Stored tokens found:", !!stored.api_access_token, !!stored.api_refresh_token);
+
     if (stored.api_access_token) {
       this.accessToken = stored.api_access_token;
       this.refreshToken = stored.api_refresh_token;
@@ -131,6 +133,7 @@ class TrueCostAPI {
 
       // Verify token is still valid by refreshing
       const result = await this.refreshSession();
+      console.log("[Savest] Session refresh result:", !!result?.user);
       return result?.user || null;
     }
     return null;
