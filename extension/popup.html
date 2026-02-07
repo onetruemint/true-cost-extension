@@ -11,6 +11,26 @@
       <h1>Savest</h1>
       <p class="subtitle">See what your money could become</p>
 
+      <!-- Sign In (top, prominent) -->
+      <div id="loggedOutView" class="auth-view">
+        <a id="signInLink" href="#" class="sign-in-link">
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="15" y1="12" x2="3" y2="12" />
+          </svg>
+          Sign In / Sign Up
+        </a>
+        <p class="auth-prompt">Sign in to sync across devices</p>
+      </div>
+
       <div class="toggle-row">
         <span>Enable on Amazon</span>
         <label class="switch">
@@ -97,31 +117,11 @@
         </p>
       </div>
 
-      <!-- Auth Section -->
-      <div id="authSection" class="auth-section">
-        <div id="loggedOutView" class="auth-view">
-          <a id="signInLink" href="#" class="sign-in-link">
-            <svg
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-              <polyline points="10 17 15 12 10 7" />
-              <line x1="15" y1="12" x2="3" y2="12" />
-            </svg>
-            Sign In / Sign Up
-          </a>
-          <p class="auth-prompt">Sign in to sync across devices</p>
-        </div>
-        <div id="loggedInView" class="auth-view" style="display: none">
-          <div class="user-info">
-            <span id="userEmail"></span>
-            <button id="signOutBtn" class="sign-out-btn">Sign Out</button>
-          </div>
+      <!-- Sign Out (bottom, low profile) -->
+      <div id="loggedInView" class="auth-section" style="display: none">
+        <div class="user-info">
+          <span id="userEmail"></span>
+          <button id="signOutBtn" class="sign-out-btn">Sign Out</button>
         </div>
       </div>
 
