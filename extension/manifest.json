@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Savest",
-  "version": "1.1.0",
+  "version": "0.0.1",
   "description": "See the true opportunity cost of purchases - what your money could be worth if invested instead",
   "permissions": ["storage", "identity", "alarms"],
   "host_permissions": [
