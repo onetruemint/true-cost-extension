@@ -1,3 +1,5 @@
+import { Section } from "./ui";
+
 export default function Stats() {
   const stats = [
     { value: "$2.4M+", label: "Saved by users" },
@@ -6,19 +8,17 @@ export default function Stats() {
   ];
 
   return (
-    <section className="py-16 bg-mint border-b border-primary/20">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-          {stats.map((stat) => (
-            <div key={stat.label}>
-              <div className="text-4xl font-bold text-primary mb-2">
-                {stat.value}
-              </div>
-              <div className="text-sm text-dark/70">{stat.label}</div>
+    <Section className="!py-16 bg-mint border-b border-primary/20">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+        {stats.map((stat) => (
+          <div key={stat.label}>
+            <div className="text-4xl font-bold text-primary mb-2">
+              {stat.value}
             </div>
-          ))}
-        </div>
+            <div className="text-sm text-dark/70">{stat.label}</div>
+          </div>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }

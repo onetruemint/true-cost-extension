@@ -3,63 +3,10 @@
 (function () {
   "use strict";
 
-  let settings = {
-    enabled: true,
-    confirmBeforePurchase: false,
-    returnRate: 7,
-    years: 10,
-    minPrice: 10,
-  };
+  let settings = { ...DEFAULT_SETTINGS };
 
   // Current question variant (loaded from Supabase or default)
   let currentVariant = null;
-
-  const BADGE_CLASS = "savest-badge";
-  const PROCESSED_ATTR = "data-savest-processed";
-
-  // Price selectors for Amazon - only main product price and cart totals
-  const PRODUCT_PAGE_SELECTORS = [
-    // Main product page price (primary price display)
-    "#corePrice_feature_div .a-price .a-offscreen",
-    "#corePriceDisplay_desktop_feature_div .a-price .a-offscreen",
-    "#priceblock_ourprice",
-    "#priceblock_dealprice",
-    "#priceblock_saleprice",
-    '.a-price[data-a-size="xl"] .a-offscreen',
-    '.a-price[data-a-size="l"] .a-offscreen',
-  ];
-
-  const CART_SELECTORS = [
-    // Cart subtotal/total
-    "#sc-subtotal-amount-activecart .a-price .a-offscreen",
-    "#sc-subtotal-amount-buybox .a-price .a-offscreen",
-    ".sc-subtotal .a-price .a-offscreen",
-    "#subtotals-marketplace-table .a-price .a-offscreen",
-  ];
-
-  // Default question variants (used when not logged in or Supabase unavailable)
-  const DEFAULT_VARIANTS = [
-    {
-      id: "default-1",
-      question_text: "Is this a want or a need?",
-      subtext: "Be honest with yourself.",
-    },
-    {
-      id: "default-2",
-      question_text: "Will this purchase bring lasting joy?",
-      subtext: "Think about how you'll feel in a month.",
-    },
-    {
-      id: "default-3",
-      question_text: "Do you really need this right now?",
-      subtext: "Consider if you could wait.",
-    },
-    {
-      id: "default-4",
-      question_text: "Is future-you going to thank you for this?",
-      subtext: "Think long-term.",
-    },
-  ];
 
   // Initialize
   chrome.storage.local.get(
@@ -74,13 +21,13 @@
 
   // Listen for messages from popup
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "settingsUpdated") {
+    if (message.action === ACTIONS.SETTINGS_UPDATED) {
       settings = message.settings;
       removeAllBadges();
       if (settings.enabled) {
         processPage();
       }
-    } else if (message.action === "toggle") {
+    } else if (message.action === ACTIONS.TOGGLE) {
       settings.enabled = message.enabled;
       if (settings.enabled) {
         processPage();
@@ -117,7 +64,7 @@
 
   async function loadQuestionVariant() {
     try {
-      const response = await chrome.runtime.sendMessage({ action: "getWeightedVariant" });
+      const response = await chrome.runtime.sendMessage({ action: ACTIONS.GET_WEIGHTED_VARIANT });
       if (response?.variant) {
         currentVariant = response.variant;
         return;
@@ -160,8 +107,8 @@
   function processPriceElement(element) {
     // Skip if already processed or is our badge
     if (
-      element.hasAttribute(PROCESSED_ATTR) ||
-      element.closest("." + BADGE_CLASS)
+      element.hasAttribute(DOM.PROCESSED_ATTR) ||
+      element.closest("." + DOM.BADGE_CLASS)
     ) {
       return;
     }
@@ -178,7 +125,7 @@
     const price = parsePrice(priceText);
 
     if (price && price > 0) {
-      element.setAttribute(PROCESSED_ATTR, "true");
+      element.setAttribute(DOM.PROCESSED_ATTR, "true");
       addTrueCostBadge(element, price);
     }
   }
@@ -235,34 +182,18 @@
 
   function detectCurrencySymbol() {
     const url = window.location.hostname;
-    if (url.includes(".co.uk")) return "£";
-    if (
-      url.includes(".de") ||
-      url.includes(".fr") ||
-      url.includes(".es") ||
-      url.includes(".it")
-    )
-      return "€";
-    if (url.includes(".co.jp")) return "¥";
-    if (url.includes(".com.au")) return "A$";
-    if (url.includes(".ca")) return "C$";
-    return "$";
+    for (const [domain, symbol] of Object.entries(CURRENCY_SYMBOLS)) {
+      if (url.includes(domain)) return symbol;
+    }
+    return DEFAULT_CURRENCY_SYMBOL;
   }
 
   function detectCurrencyCode() {
     const url = window.location.hostname;
-    if (url.includes(".co.uk")) return "GBP";
-    if (
-      url.includes(".de") ||
-      url.includes(".fr") ||
-      url.includes(".es") ||
-      url.includes(".it")
-    )
-      return "EUR";
-    if (url.includes(".co.jp")) return "JPY";
-    if (url.includes(".com.au")) return "AUD";
-    if (url.includes(".ca")) return "CAD";
-    return "USD";
+    for (const [domain, code] of Object.entries(CURRENCY_CODES)) {
+      if (url.includes(domain)) return code;
+    }
+    return DEFAULT_CURRENCY_CODE;
   }
 
   function addTrueCostBadge(priceElement, price) {
@@ -275,12 +206,12 @@
       priceElement.parentElement;
 
     // Check if badge already exists for this container
-    if (container.querySelector("." + BADGE_CLASS)) {
+    if (container.querySelector("." + DOM.BADGE_CLASS)) {
       return;
     }
 
     const badge = document.createElement("div");
-    badge.className = BADGE_CLASS;
+    badge.className = DOM.BADGE_CLASS;
     badge.innerHTML = `
       <span class="savest-label">💰 If invested, worth <span class="savest-value">${formatCurrency(futureValue)}</span> in ${settings.years} yrs</span>
     `;
@@ -293,33 +224,20 @@
   }
 
   function removeAllBadges() {
-    document.querySelectorAll("." + BADGE_CLASS).forEach((el) => el.remove());
-    document.querySelectorAll("[" + PROCESSED_ATTR + "]").forEach((el) => {
-      el.removeAttribute(PROCESSED_ATTR);
+    document.querySelectorAll("." + DOM.BADGE_CLASS).forEach((el) => el.remove());
+    document.querySelectorAll("[" + DOM.PROCESSED_ATTR + "]").forEach((el) => {
+      el.removeAttribute(DOM.PROCESSED_ATTR);
     });
   }
 
   // Purchase confirmation feature
-  const CONFIRM_PROCESSED_ATTR = "data-savest-confirm";
-
-  const PURCHASE_BUTTON_SELECTORS = [
-    "#add-to-cart-button",
-    "#buy-now-button",
-    'input[name="submit.add-to-cart"]',
-    "#submit.add-to-cart",
-    '.a-button-input[name="submit.addToCart"]',
-    "#sc-buy-box-ptc-button input",
-    "#submitOrderButtonId input",
-    'input[name="placeYourOrder1"]',
-  ];
-
   function setupPurchaseConfirmation() {
     if (!settings.confirmBeforePurchase) return;
 
     PURCHASE_BUTTON_SELECTORS.forEach((selector) => {
       document.querySelectorAll(selector).forEach((button) => {
-        if (button.hasAttribute(CONFIRM_PROCESSED_ATTR)) return;
-        button.setAttribute(CONFIRM_PROCESSED_ATTR, "true");
+        if (button.hasAttribute(DOM.CONFIRM_ATTR)) return;
+        button.setAttribute(DOM.CONFIRM_ATTR, "true");
 
         button.addEventListener("click", handlePurchaseClick, true);
       });
@@ -330,8 +248,8 @@
     if (!settings.confirmBeforePurchase) return;
 
     // Don't intercept if user already confirmed
-    if (e.target.hasAttribute("data-savest-confirmed")) {
-      e.target.removeAttribute("data-savest-confirmed");
+    if (e.target.hasAttribute(DOM.CONFIRMED_ATTR)) {
+      e.target.removeAttribute(DOM.CONFIRMED_ATTR);
       return;
     }
 
@@ -372,12 +290,12 @@
       document.querySelector("#productTitle") ||
       document.querySelector("#title") ||
       document.querySelector("h1.a-size-large");
-    return titleEl ? titleEl.textContent.trim().substring(0, 200) : null;
+    return titleEl ? titleEl.textContent.trim().substring(0, DOM.MAX_TITLE_LENGTH) : null;
   }
 
   function showWantNeedModal(price, targetButton) {
     // Remove any existing modal
-    const existing = document.getElementById("savest-modal");
+    const existing = document.getElementById(DOM.MODAL_ID);
     if (existing) existing.remove();
 
     const futureValue = calculateFutureValue(price);
@@ -387,7 +305,7 @@
     const variant = currentVariant || DEFAULT_VARIANTS[0];
 
     const modal = document.createElement("div");
-    modal.id = "savest-modal";
+    modal.id = DOM.MODAL_ID;
     modal.className = "savest-modal-overlay";
 
     // Step 1: Want vs Need question
@@ -411,7 +329,7 @@
     modal.querySelector(".savest-modal-need").addEventListener("click", () => {
       modal.remove();
       recordDecision(price, "need", "purchased", variant);
-      targetButton.setAttribute("data-savest-confirmed", "true");
+      targetButton.setAttribute(DOM.CONFIRMED_ATTR, "true");
       targetButton.click();
     });
 
@@ -481,7 +399,7 @@
       .addEventListener("click", () => {
         modal.remove();
         recordDecision(price, "want", "purchased", variant);
-        targetButton.setAttribute("data-savest-confirmed", "true");
+        targetButton.setAttribute(DOM.CONFIRMED_ATTR, "true");
         targetButton.click();
       });
   }
@@ -518,7 +436,7 @@
   async function recordDecision(price, userResponse, finalDecision, variant) {
     try {
       await chrome.runtime.sendMessage({
-        action: "recordSaving",
+        action: ACTIONS.RECORD_SAVING,
         data: {
           price: price,
           currency: detectCurrencyCode(),

@@ -1,6 +1,5 @@
-import Link from "next/link";
-import Image from "next/image";
 import { Footer } from "@/components";
+import { LogoLink, BackLink } from "@/components/ui";
 
 export const metadata = {
   title: "Privacy Policy - Savest",
@@ -12,18 +11,7 @@ export default function PrivacyPage() {
       <main className="min-h-screen bg-gradient-to-b from-mint to-white">
         <div className="max-w-3xl mx-auto px-6 py-16">
           <div className="mb-10">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2.5 text-xl font-semibold text-dark"
-            >
-              <Image
-                src="/SavestRound.svg"
-                alt="Savest logo"
-                width={40}
-                height={40}
-              />
-              <span>Savest</span>
-            </Link>
+            <LogoLink size={40} />
           </div>
 
           <h1 className="text-3xl font-bold text-dark mb-2">Privacy Policy</h1>
@@ -216,12 +204,7 @@ export default function PrivacyPage() {
           </div>
 
           <div className="mt-12">
-            <Link
-              href="/"
-              className="text-primary hover:underline text-sm font-medium"
-            >
-              &larr; Back to home
-            </Link>
+            <BackLink />
           </div>
         </div>
       </main>

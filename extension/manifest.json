@@ -38,7 +38,7 @@
         "*://*.amazon.co.jp/*",
         "*://*.amazon.com.au/*"
       ],
-      "js": ["lib/supabase.js", "content.js"],
+      "js": ["lib/constants.js", "lib/supabase.js", "content.js"],
       "css": ["content.css"]
     },
     {
@@ -46,7 +46,7 @@
         "http://localhost:3001/*",
         "https://truecostcalculator.com/*"
       ],
-      "js": ["auth-sync.js"]
+      "js": ["lib/constants.js", "auth-sync.js"]
     }
   ],
   "web_accessible_resources": [

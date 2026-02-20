@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { signIn, signUp, getGoogleOAuthUrl } from "@/lib/api";
+import { LogoLink, Card, Alert, BackLink } from "@/components/ui";
+import { STORAGE_KEYS, EVENTS } from "@/lib/constants";
 
 export default function SignInPage() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -31,12 +31,12 @@ export default function SignInPage() {
 
       if (result.session) {
         // Store tokens for the extension to pick up
-        localStorage.setItem("tc_access_token", result.session.access_token);
-        localStorage.setItem("tc_refresh_token", result.session.refresh_token);
-        localStorage.setItem("tc_user", JSON.stringify(result.user));
+        localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, result.session.access_token);
+        localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, result.session.refresh_token);
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(result.user));
 
         // Dispatch event for extension content script
-        window.dispatchEvent(new Event("tc-auth-updated"));
+        window.dispatchEvent(new Event(EVENTS.AUTH_UPDATED));
 
         setSuccess(
           "Success! You can now close this page and return to the extension.",
@@ -66,21 +66,10 @@ export default function SignInPage() {
     <div className="min-h-screen bg-gradient-to-b from-mint to-white flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2.5 text-xl font-semibold text-dark"
-          >
-            <Image
-              src="/SavestRound.svg"
-              alt="Savent logo"
-              width={48}
-              height={48}
-            />
-            <span>Savest</span>
-          </Link>
+          <LogoLink />
         </div>
 
-        <div className="bg-offwhite rounded-xl shadow-xl border border-primary/20 p-8">
+        <Card>
           <h1 className="text-2xl font-bold text-dark text-center mb-2">
             {isSignUp ? "Create an account" : "Welcome back"}
           </h1>
@@ -153,17 +142,9 @@ export default function SignInPage() {
               />
             </div>
 
-            {error && (
-              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
-                {error}
-              </div>
-            )}
+            {error && <Alert variant="error">{error}</Alert>}
 
-            {success && (
-              <div className="p-3 rounded-lg bg-mint border border-primary/30 text-primary text-sm">
-                {success}
-              </div>
-            )}
+            {success && <Alert variant="success">{success}</Alert>}
 
             <button
               type="submit"
@@ -217,17 +198,9 @@ export default function SignInPage() {
           <p className="mt-6 text-center text-sm text-dark/50">
             After signing in, return to the extension to see your synced data.
           </p>
-        </div>
+        </Card>
 
-        {/* Back to home */}
-        <p className="text-center mt-6">
-          <Link
-            href="/"
-            className="text-primary hover:underline text-sm font-medium"
-          >
-            ← Back to home
-          </Link>
-        </p>
+        <BackLink />
       </div>
     </div>
   );

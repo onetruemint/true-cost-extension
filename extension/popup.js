@@ -27,18 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const bestVariantText = document.getElementById("bestVariantText");
   const bestVariantStats = document.getElementById("bestVariantStats");
 
-  // Frontend URL for auth
-  const FRONTEND_URL = "http://localhost:3001";
-
   let currentPeriod = "all";
 
-  // Default settings
+  // Default settings with fallback values
   const defaults = {
-    enabled: true,
-    confirmBeforePurchase: false,
-    returnRate: 7,
-    years: 10,
-    minPrice: 10,
+    ...DEFAULT_SETTINGS,
     totalSaved: 0,
     skippedItems: [],
   };
@@ -182,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Sign in link - opens frontend auth page
   signInLink.addEventListener("click", (e) => {
     e.preventDefault();
-    chrome.tabs.create({ url: `${FRONTEND_URL}/signin` });
+    chrome.tabs.create({ url: `${SAVEST_FRONTEND_URL}/signin` });
   });
 
   // Sign out
@@ -194,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bestVariant.style.display = "none";
 
     // Notify background script
-    chrome.runtime.sendMessage({ action: "authStateChanged", user: null });
+    chrome.runtime.sendMessage({ action: ACTIONS.AUTH_STATE_CHANGED, user: null });
   });
 
   // Time filter buttons
@@ -214,8 +207,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const settings = {
       enabled: enableToggle.checked,
       confirmBeforePurchase: confirmToggle.checked,
-      returnRate: parseFloat(returnRateInput.value) || 7,
-      years: parseInt(yearsInput.value) || 10,
+      returnRate: parseFloat(returnRateInput.value) || DEFAULT_SETTINGS.returnRate,
+      years: parseInt(yearsInput.value) || DEFAULT_SETTINGS.years,
       minPrice: parseFloat(minPriceInput.value) || 0,
     };
 
@@ -226,14 +219,14 @@ document.addEventListener("DOMContentLoaded", () => {
       status.style.opacity = "1";
       setTimeout(() => {
         status.style.opacity = "0";
-      }, 1000);
+      }, TIMING.STATUS_DISPLAY_MS);
 
       // Notify content scripts
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs[0]) {
           chrome.tabs
             .sendMessage(tabs[0].id, {
-              action: "settingsUpdated",
+              action: ACTIONS.SETTINGS_UPDATED,
               settings: settings,
             })
             .catch(() => {
@@ -252,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Debounced save for text inputs
   function debouncedSave() {
     if (saveTimeout) clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(saveSettings, 500);
+    saveTimeout = setTimeout(saveSettings, TIMING.SETTINGS_DEBOUNCE_MS);
   }
 
   // Update example calculation
@@ -295,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Listen for auth state changes from other parts of extension
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "authStateChanged") {
+    if (message.action === ACTIONS.AUTH_STATE_CHANGED) {
       updateAuthUI(message.user);
       loadSettings();
       loadSavings();

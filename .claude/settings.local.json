@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(npx create-next-app@latest webapp --typescript --tailwind --eslint --app --src-dir --no-import-alias --no-turbopack)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(ls:*)",
+      "Bash(git -C /home/addicted2saltwsl/projects/savest log --oneline --all -- '*.env')"
     ]
   }
 }

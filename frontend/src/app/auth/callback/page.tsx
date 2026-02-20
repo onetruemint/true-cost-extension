@@ -3,6 +3,8 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Card, Spinner, BackLink } from "@/components/ui";
+import { STORAGE_KEYS, EVENTS } from "@/lib/constants";
 
 function AuthCallbackContent() {
   const searchParams = useSearchParams();
@@ -20,13 +22,13 @@ function AuthCallbackContent() {
 
         if (accessToken && refreshToken) {
           // Store tokens for the extension to pick up
-          localStorage.setItem("tc_access_token", accessToken);
-          localStorage.setItem("tc_refresh_token", refreshToken);
+          localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+          localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
 
           // Try to get user info
           try {
             const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/auth/google/callback`,
+              `${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -38,14 +40,14 @@ function AuthCallbackContent() {
             );
             const data = await response.json();
             if (data.user) {
-              localStorage.setItem("tc_user", JSON.stringify(data.user));
+              localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(data.user));
             }
           } catch {
             // Still consider it a success since we have the tokens
           }
 
           // Dispatch event for extension content script
-          window.dispatchEvent(new Event("tc-auth-updated"));
+          window.dispatchEvent(new Event(EVENTS.AUTH_UPDATED));
 
           setStatus("success");
           setMessage("You're signed in! You can now close this page and return to the extension.");
@@ -71,10 +73,10 @@ function AuthCallbackContent() {
   }, [searchParams]);
 
   return (
-    <div className="bg-offwhite rounded-xl shadow-xl border border-primary/20 p-8">
+    <Card>
       {status === "loading" && (
         <>
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <Spinner />
           <h1 className="text-xl font-semibold text-dark">Completing sign in...</h1>
         </>
       )}
@@ -125,16 +127,16 @@ function AuthCallbackContent() {
           </Link>
         </>
       )}
-    </div>
+    </Card>
   );
 }
 
 function LoadingFallback() {
   return (
-    <div className="bg-offwhite rounded-xl shadow-xl border border-primary/20 p-8">
-      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+    <Card>
+      <Spinner />
       <h1 className="text-xl font-semibold text-dark text-center">Loading...</h1>
-    </div>
+    </Card>
   );
 }
 
@@ -146,11 +148,7 @@ export default function AuthCallbackPage() {
           <AuthCallbackContent />
         </Suspense>
 
-        <p className="mt-6">
-          <Link href="/" className="text-primary hover:underline text-sm font-medium">
-            ← Back to home
-          </Link>
-        </p>
+        <BackLink />
       </div>
     </div>
   );

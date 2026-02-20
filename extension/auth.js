@@ -48,14 +48,14 @@
 
       // Notify the background script
       chrome.runtime.sendMessage({
-        action: "authStateChanged",
+        action: ACTIONS.AUTH_STATE_CHANGED,
         user: window.supabase.getUser(),
       });
 
       // Close this tab after a short delay
       setTimeout(() => {
         window.close();
-      }, 2000);
+      }, TIMING.AUTH_CLOSE_DELAY_MS);
     } catch (e) {
       showStatus("Authentication failed: " + e.message, "error");
     }

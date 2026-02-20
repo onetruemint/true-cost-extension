@@ -4,9 +4,9 @@
 
 // Check for auth tokens in localStorage and sync to extension
 function syncAuthToExtension() {
-  const accessToken = localStorage.getItem("tc_access_token");
-  const refreshToken = localStorage.getItem("tc_refresh_token");
-  const userStr = localStorage.getItem("tc_user");
+  const accessToken = localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
+  const refreshToken = localStorage.getItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN);
+  const userStr = localStorage.getItem(LOCAL_STORAGE_KEYS.USER);
 
   if (accessToken && refreshToken) {
     let user = null;
@@ -18,16 +18,11 @@ function syncAuthToExtension() {
 
     // Send to extension background script
     chrome.runtime.sendMessage({
-      action: "syncAuthFromFrontend",
+      action: ACTIONS.SYNC_AUTH_FROM_FRONTEND,
       accessToken,
       refreshToken,
       user,
     });
-
-    // Clear from localStorage after syncing (optional - for security)
-    // localStorage.removeItem("tc_access_token");
-    // localStorage.removeItem("tc_refresh_token");
-    // localStorage.removeItem("tc_user");
   }
 }
 
@@ -36,12 +31,12 @@ syncAuthToExtension();
 
 // Also listen for storage changes (in case user logs in after page load)
 window.addEventListener("storage", (e) => {
-  if (e.key === "tc_access_token" || e.key === "tc_refresh_token") {
+  if (e.key === LOCAL_STORAGE_KEYS.ACCESS_TOKEN || e.key === LOCAL_STORAGE_KEYS.REFRESH_TOKEN) {
     syncAuthToExtension();
   }
 });
 
 // Listen for custom event from the page (for same-tab updates)
-window.addEventListener("tc-auth-updated", () => {
+window.addEventListener(EVENTS.AUTH_UPDATED, () => {
   syncAuthToExtension();
 });

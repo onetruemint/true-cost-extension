@@ -7,11 +7,18 @@ import express from "express";
 import cors from "cors";
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
+import {
+  TABLES,
+  DB_ERROR_NO_ROWS,
+  DEFAULT_CURRENCY,
+  MIN_VARIANT_SHOWN_COUNT,
+  DEFAULT_PORT,
+} from "./constants.js";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || DEFAULT_PORT;
 
 // Validate required environment variables
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -265,13 +272,12 @@ app.get("/settings", async (req, res) => {
 
     const supabase = getSupabaseForUser(auth.token);
     const { data, error } = await supabase
-      .from("user_settings")
+      .from(TABLES.USER_SETTINGS)
       .select("*")
       .eq("user_id", auth.user.id)
       .single();
 
-    if (error && error.code !== "PGRST116") {
-      // PGRST116 = no rows
+    if (error && error.code !== DB_ERROR_NO_ROWS) {
       return res.status(400).json({ error: error.message });
     }
 
@@ -294,7 +300,7 @@ app.post("/settings", async (req, res) => {
 
     const supabase = getSupabaseForUser(auth.token);
     const { data, error } = await supabase
-      .from("user_settings")
+      .from(TABLES.USER_SETTINGS)
       .upsert(
         {
           user_id: auth.user.id,
@@ -333,7 +339,7 @@ app.get("/variants", async (req, res) => {
 
     const supabase = getSupabaseForUser(auth.token);
     const { data, error } = await supabase
-      .from("question_variants")
+      .from(TABLES.QUESTION_VARIANTS)
       .select("*")
       .eq("is_active", true);
 
@@ -357,7 +363,7 @@ app.get("/variants/effectiveness", async (req, res) => {
 
     const supabase = getSupabaseForUser(auth.token);
     const { data, error } = await supabase
-      .from("question_effectiveness")
+      .from(TABLES.QUESTION_EFFECTIVENESS)
       .select("*, question_variants(question_text, subtext)")
       .eq("user_id", auth.user.id);
 
@@ -401,11 +407,11 @@ app.post("/savings", async (req, res) => {
 
     // Insert saving record
     const { data: saving, error: savingError } = await supabase
-      .from("savings")
+      .from(TABLES.SAVINGS)
       .insert({
         user_id: auth.user.id,
         price,
-        currency: currency || "USD",
+        currency: currency || DEFAULT_CURRENCY,
         url,
         product_title,
         question_variant_id,
@@ -426,7 +432,7 @@ app.post("/savings", async (req, res) => {
 
       // Get existing stats
       const { data: existing } = await supabase
-        .from("question_effectiveness")
+        .from(TABLES.QUESTION_EFFECTIVENESS)
         .select("*")
         .eq("user_id", auth.user.id)
         .eq("question_variant_id", question_variant_id)
@@ -434,7 +440,7 @@ app.post("/savings", async (req, res) => {
 
       if (existing) {
         await supabase
-          .from("question_effectiveness")
+          .from(TABLES.QUESTION_EFFECTIVENESS)
           .update({
             times_shown: existing.times_shown + 1,
             times_skipped: existing.times_skipped + (wasSkipped ? 1 : 0),
@@ -442,7 +448,7 @@ app.post("/savings", async (req, res) => {
           })
           .eq("id", existing.id);
       } else {
-        await supabase.from("question_effectiveness").insert({
+        await supabase.from(TABLES.QUESTION_EFFECTIVENESS).insert({
           user_id: auth.user.id,
           question_variant_id,
           times_shown: 1,
@@ -471,7 +477,7 @@ app.get("/savings", async (req, res) => {
 
     const supabase = getSupabaseForUser(auth.token);
     let query = supabase
-      .from("savings")
+      .from(TABLES.SAVINGS)
       .select("price, created_at")
       .eq("user_id", auth.user.id)
       .eq("final_decision", "skipped");
@@ -549,10 +555,10 @@ app.get("/savings/best-variant", async (req, res) => {
 
     const supabase = getSupabaseForUser(auth.token);
     const { data, error } = await supabase
-      .from("question_effectiveness")
+      .from(TABLES.QUESTION_EFFECTIVENESS)
       .select("*, question_variants(question_text, subtext)")
       .eq("user_id", auth.user.id)
-      .gte("times_shown", 3)
+      .gte("times_shown", MIN_VARIANT_SHOWN_COUNT)
       .order("times_skipped", { ascending: false })
       .limit(1);
 

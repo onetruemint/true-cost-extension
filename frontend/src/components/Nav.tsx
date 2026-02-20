@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { LogoLink } from "./ui";
+import { STORAGE_KEYS, EVENTS, CHROME_WEBSTORE_URL } from "@/lib/constants";
 
 export default function Nav() {
   const [user, setUser] = useState<{ email?: string } | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("tc_user");
+    const stored = localStorage.getItem(STORAGE_KEYS.USER);
     if (stored) {
       try {
         setUser(JSON.parse(stored));
@@ -16,7 +17,7 @@ export default function Nav() {
     }
 
     const handleAuthUpdate = () => {
-      const updated = localStorage.getItem("tc_user");
+      const updated = localStorage.getItem(STORAGE_KEYS.USER);
       if (updated) {
         try {
           setUser(JSON.parse(updated));
@@ -26,10 +27,10 @@ export default function Nav() {
       }
     };
 
-    window.addEventListener("tc-auth-updated", handleAuthUpdate);
+    window.addEventListener(EVENTS.AUTH_UPDATED, handleAuthUpdate);
     window.addEventListener("storage", handleAuthUpdate);
     return () => {
-      window.removeEventListener("tc-auth-updated", handleAuthUpdate);
+      window.removeEventListener(EVENTS.AUTH_UPDATED, handleAuthUpdate);
       window.removeEventListener("storage", handleAuthUpdate);
     };
   }, []);
@@ -37,18 +38,7 @@ export default function Nav() {
   return (
     <nav className="fixed top-0 left-0 right-0 bg-mint/90 backdrop-blur-sm border-b border-primary/20 z-50">
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 text-lg font-semibold text-dark"
-        >
-          <Image
-            src="/SavestRound.svg"
-            alt="Savent logo"
-            width={48}
-            height={48}
-          />
-          <span>Savest</span>
-        </Link>
+        <LogoLink />
 
         <div className="flex items-center gap-8">
           <Link
@@ -82,7 +72,7 @@ export default function Nav() {
             </Link>
           )}
           <a
-            href="https://chrome.google.com/webstore"
+            href={CHROME_WEBSTORE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-primary hover:bg-primary-hover text-offwhite px-4 py-2 rounded-lg text-sm font-medium transition-colors"

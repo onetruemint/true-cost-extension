@@ -1,3 +1,5 @@
+import { Section, SectionTitle } from "./ui";
+
 const testimonials = [
   {
     quote: "This extension completely changed how I think about spending. I've saved over $500 in just two months!",
@@ -15,22 +17,18 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="py-24 bg-offwhite">
-      <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-          What Users Are Saying
-        </h2>
+    <Section className="bg-offwhite">
+      <SectionTitle>What Users Are Saying</SectionTitle>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((t) => (
-            <div key={t.author} className="bg-mint/50 p-8 rounded-lg border border-primary/10">
-              <div className="text-yellow-400 text-lg mb-4">★★★★★</div>
-              <p className="text-dark leading-relaxed mb-4">&quot;{t.quote}&quot;</p>
-              <div className="text-sm font-medium text-dark/70">- {t.author}</div>
-            </div>
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {testimonials.map((t) => (
+          <div key={t.author} className="bg-mint/50 p-8 rounded-lg border border-primary/10">
+            <div className="text-yellow-400 text-lg mb-4">★★★★★</div>
+            <p className="text-dark leading-relaxed mb-4">&quot;{t.quote}&quot;</p>
+            <div className="text-sm font-medium text-dark/70">- {t.author}</div>
+          </div>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }

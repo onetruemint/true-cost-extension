@@ -3,9 +3,6 @@
  * Communicates with the backend proxy server (not directly with Supabase)
  */
 
-// Backend proxy server URL - update this to your deployed server
-const API_URL = "http://localhost:3000";
-
 class TrueCostAPI {
   constructor(apiUrl) {
     this.apiUrl = apiUrl;
@@ -77,9 +74,9 @@ class TrueCostAPI {
     this.refreshToken = null;
     this.user = null;
     await chrome.storage.local.remove([
-      "api_access_token",
-      "api_refresh_token",
-      "api_user",
+      STORAGE_KEYS.ACCESS_TOKEN,
+      STORAGE_KEYS.REFRESH_TOKEN,
+      STORAGE_KEYS.USER,
     ]);
   }
 
@@ -106,9 +103,9 @@ class TrueCostAPI {
 
       // Persist tokens
       chrome.storage.local.set({
-        api_access_token: this.accessToken,
-        api_refresh_token: this.refreshToken,
-        api_user: this.user,
+        [STORAGE_KEYS.ACCESS_TOKEN]: this.accessToken,
+        [STORAGE_KEYS.REFRESH_TOKEN]: this.refreshToken,
+        [STORAGE_KEYS.USER]: this.user,
       });
     } else if (data.user && !data.session) {
       // User created but not yet confirmed (email confirmation)
@@ -119,15 +116,15 @@ class TrueCostAPI {
 
   async restoreSession() {
     const stored = await chrome.storage.local.get([
-      "api_access_token",
-      "api_refresh_token",
-      "api_user",
+      STORAGE_KEYS.ACCESS_TOKEN,
+      STORAGE_KEYS.REFRESH_TOKEN,
+      STORAGE_KEYS.USER,
     ]);
 
-    if (stored.api_access_token) {
-      this.accessToken = stored.api_access_token;
-      this.refreshToken = stored.api_refresh_token;
-      this.user = stored.api_user;
+    if (stored[STORAGE_KEYS.ACCESS_TOKEN]) {
+      this.accessToken = stored[STORAGE_KEYS.ACCESS_TOKEN];
+      this.refreshToken = stored[STORAGE_KEYS.REFRESH_TOKEN];
+      this.user = stored[STORAGE_KEYS.USER];
 
       // Verify token is still valid by refreshing
       const result = await this.refreshSession();
@@ -168,9 +165,9 @@ class TrueCostAPI {
       this.user = data.user;
 
       await chrome.storage.local.set({
-        api_access_token: this.accessToken,
-        api_refresh_token: this.refreshToken,
-        api_user: this.user,
+        [STORAGE_KEYS.ACCESS_TOKEN]: this.accessToken,
+        [STORAGE_KEYS.REFRESH_TOKEN]: this.refreshToken,
+        [STORAGE_KEYS.USER]: this.user,
       });
 
       return { user: this.user, error: null };
@@ -252,11 +249,11 @@ class TrueCostAPI {
       const stat = statsMap.get(v.id);
       if (!stat || stat.times_shown === 0) {
         // New variant - give it a base weight
-        return { variant: v, weight: 1 };
+        return { variant: v, weight: VARIANT_WEIGHTS.BASE_WEIGHT };
       }
       // Weight by skip rate (higher skip rate = more effective = higher weight)
       const skipRate = stat.times_skipped / stat.times_shown;
-      return { variant: v, weight: 0.5 + skipRate };
+      return { variant: v, weight: VARIANT_WEIGHTS.MIN_WEIGHT_OFFSET + skipRate };
     });
 
     // Weighted random selection
@@ -286,7 +283,7 @@ class TrueCostAPI {
         method: "POST",
         body: JSON.stringify({
           price: data.price,
-          currency: data.currency || "USD",
+          currency: data.currency || DEFAULT_CURRENCY_CODE,
           url: data.url,
           product_title: data.productTitle,
           question_variant_id: data.questionVariantId,
@@ -349,7 +346,7 @@ class TrueCostAPI {
 }
 
 // Export singleton instance
-const supabase = new TrueCostAPI(API_URL);
+const supabase = new TrueCostAPI(SAVEST_API_URL);
 
 // Make available globally (works in window, service worker, and content scripts)
 if (typeof self !== "undefined") {
