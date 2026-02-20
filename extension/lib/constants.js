@@ -6,8 +6,8 @@
 
 // ----- Environment config (update these for deployment) -----
 
-const SAVEST_API_URL = "http://localhost:3000";
-const SAVEST_FRONTEND_URL = "http://localhost:3001";
+const SAVEST_API_URL = "https://api.savest.onetruemint.com/";
+const SAVEST_FRONTEND_URL = "https://savest.onetruemint.com/";
 
 // ----- Chrome storage keys -----
 

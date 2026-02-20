@@ -8,7 +8,7 @@
     "http://localhost:3000/*",
     "http://localhost:3001/*",
     "https://*.supabase.co/*",
-    "https://savest.extensions.onetruemint.com/*"
+    "https://savest.onetruemint.com/*"
   ],
   "action": {
     "default_popup": "popup.html",
